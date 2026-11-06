@@ -15,13 +15,20 @@ public class QueueController {
 
     private final QueueService queueService;
 
-    @PostMapping("/add-customer")
+    @PostMapping("/add-customer-queue")
     public String addCustomer(@RequestBody CustomerRequestDto customerRequestDto) {
         return queueService.addCustomer(customerRequestDto);
     }
 
-    @GetMapping
+    @GetMapping("/get-queue-customers")
     public List<Customer> getQueueCustomers(){
         return queueService.getQueueCustomers();
     }
+
+    @GetMapping("/get-customer-queue")
+    public String getCustomerQueue(String finCode){
+        return queueService.getCustomerQueue(finCode);
+    }
+
+
 }

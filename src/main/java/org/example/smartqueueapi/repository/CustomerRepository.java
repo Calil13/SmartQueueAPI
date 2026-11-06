@@ -13,4 +13,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findByNameAndFinCode(String name, String finCode);
 
     List<Customer> findAllByCustomerStatusIs(CustomerStatus customerStatus);
+
+    Customer findByFinCode(String finCode);
 }

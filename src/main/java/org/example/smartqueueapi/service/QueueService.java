@@ -8,12 +8,17 @@ import org.example.smartqueueapi.enums.CustomerStatus;
 import org.example.smartqueueapi.repository.CustomerRepository;
 import org.example.smartqueueapi.repository.QueueRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
+import java.util.ArrayDeque;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class QueueService {
+
+    ArrayDeque<Customer> queue = new ArrayDeque<>();
 
     private final CustomerRepository customerRepository;
     private final QueueRepository queueRepository;
@@ -27,25 +32,54 @@ public class QueueService {
                 throw new IllegalStateException("Customer already has an active queue request");
             }
 
-            customerExist.setCustomerStatus(CustomerStatus.WAITING);
+            if (queue.size() == 1) {
+                customerExist.setCustomerStatus(CustomerStatus.SERVING);
+            } else {
+                customerExist.setCustomerStatus(CustomerStatus.WAITING);
+            }
+
+            return "Customer added to queue again.";
         }
 
         Customer customer = Customer.builder()
                 .name(customerRequestDto.getName())
                 .finCode(customerRequestDto.getFinCode())
                 .customerStatus(CustomerStatus.WAITING)
+                .createdAt(LocalDateTime.now())
                 .build();
         customerRepository.save(customer);
+        queue.addLast(customer);
 
         Queue queue = Queue.builder()
                 .customer(customer)
                 .build();
         queueRepository.save(queue);
 
-        return "New Customer added to queue";
+        return "New Customer added to queue.";
     }
 
     public List<Customer> getQueueCustomers(){
         return customerRepository.findAllByCustomerStatusIs(CustomerStatus.WAITING);
+    }
+
+    public String getCustomerQueue(String finCode){
+        var customer = customerRepository.findByFinCode(finCode);
+
+        if (customer == null) {
+            throw new RuntimeException("CUSTOMER_NOT_FOUND");
+        }
+
+        int row = 1;
+
+        System.out.println("FIN Code: " + finCode);
+
+        for (Customer customerArr : queue) {
+            if (customerArr.getFinCode().equals(finCode)) {
+                return customer.getName() + "'s position is " + row;
+            }
+            row++;
+        }
+
+        return "Customer is not in the queue";
     }
 }
