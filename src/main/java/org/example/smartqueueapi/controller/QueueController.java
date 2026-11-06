@@ -2,9 +2,11 @@ package org.example.smartqueueapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.smartqueueapi.dto.CustomerRequestDto;
-import org.example.smartqueueapi.dto.CustomerResponseDto;
+import org.example.smartqueueapi.entity.Customer;
 import org.example.smartqueueapi.service.QueueService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class QueueController {
     }
 
     @GetMapping
-    public CustomerResponseDto getQueueCustomers(){
-
+    public List<Customer> getQueueCustomers(){
+        return queueService.getQueueCustomers();
     }
 }

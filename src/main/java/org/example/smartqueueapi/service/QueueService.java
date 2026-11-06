@@ -9,6 +9,8 @@ import org.example.smartqueueapi.repository.CustomerRepository;
 import org.example.smartqueueapi.repository.QueueRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class QueueService {
@@ -41,5 +43,9 @@ public class QueueService {
         queueRepository.save(queue);
 
         return "New Customer added to queue";
+    }
+
+    public List<Customer> getQueueCustomers(){
+        return customerRepository.findAllByCustomerStatusIs(CustomerStatus.WAITING);
     }
 }
