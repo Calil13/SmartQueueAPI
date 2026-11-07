@@ -82,4 +82,36 @@ public class QueueService {
 
         return "Customer is not in the queue";
     }
+
+    public String nextCustomer() {
+        var customer = queue.peek();
+
+        if (customer != null) {
+            customer.setCustomerStatus(CustomerStatus.COMPLETED);
+        }
+
+        queue.poll();
+
+        var nextCustomer = queue.peek();
+
+        if (nextCustomer == null) {
+            return "Customer completed. No customers waiting.";
+        }
+
+        return "Next customer: " + nextCustomer.getName();
+    }
+
+    public String deleteCustomer(String finCode) {
+        var customer = customerRepository.findByFinCode(finCode);
+
+        if (customer == null) {
+            return "CUSTOMER_NOT_FOUND";
+        }
+
+        customer.setCustomerStatus(CustomerStatus.CANCELLED);
+
+        queue.removeIf(customerRemove -> customerRemove.getFinCode().equals(finCode));
+
+        return "Customer out of queue: " + customer.getName();
+    }
 }

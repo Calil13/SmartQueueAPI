@@ -30,5 +30,13 @@ public class QueueController {
         return queueService.getCustomerQueue(finCode);
     }
 
+    @PostMapping("/next-customer")
+    public String nextCustomer() {
+        return queueService.nextCustomer();
+    }
 
+    @DeleteMapping("/delete-customer")
+    public String deleteCustomer(String finCode) {
+        return queueService.deleteCustomer(finCode);
+    }
 }
