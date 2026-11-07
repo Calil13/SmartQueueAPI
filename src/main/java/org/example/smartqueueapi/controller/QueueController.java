@@ -36,7 +36,7 @@ public class QueueController {
     }
 
     @DeleteMapping("/delete-customer")
-    public String deleteCustomer(String finCode) {
+    public synchronized String deleteCustomer(String finCode) {
         return queueService.deleteCustomer(finCode);
     }
 }

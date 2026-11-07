@@ -83,7 +83,7 @@ public class QueueService {
         return "Customer is not in the queue";
     }
 
-    public String nextCustomer() {
+    public synchronized String nextCustomer() {
         var customer = queue.peek();
 
         if (customer != null) {
